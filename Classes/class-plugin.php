@@ -27,7 +27,7 @@ class Plugin {
 
 			if ( get_option( self::$option_key ) ) {
 
-				$data = get_option( 'PLUGIN_PREFIX_data' );
+				$data = get_option( self::$option_key );
 				self::$instance->name = $data['Name'];
 				self::$instance->version = $data['Version'];
 
