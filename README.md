@@ -112,3 +112,4 @@ If you don't use [Composer](https://getcomposer.org/doc/00-intro.md) and you don
 Use this code freely, widely and for free. Provision of this code provides and implies no guarantee.
 
 Please respect the GPL v3 licence, which is available via http://www.gnu.org/licenses/gpl-3.0.html
+"# Advanced-WPPerformance" 
