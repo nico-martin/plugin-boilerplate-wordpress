@@ -11,7 +11,7 @@ class Plugin {
 	public $version = '';
 	public $file = '';
 
-	public static $option_key = 'PLUGIN_PREFIX_data';
+	public $option_key = 'PLUGIN_PREFIX_data';
 
 	/**
 	 * Creates an instance if one isn't already available,
