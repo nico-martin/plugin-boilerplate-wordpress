@@ -79,30 +79,6 @@ class Plugin {
 	/**
 	 * Update Plugin Data
 	 */
-	public function update_plugin_data() {
-
-		$db_data   = get_option( self::$option_key );
-		$file_data = get_plugin_data( self::$instance->file );
-
-		if ( ! $db_data || version_compare( $file_data['Version'], $db_data['Version'], '>' ) ) {
-
-			$new_option = array(
-				'Version' => $file_data['Version'],
-				'Name'    => $file_data['Name'],
-			);
-
-			self::$instance->name    = $new_option['Name'];
-			self::$instance->version = $new_option['Version'];
-
-			update_option( self::$option_key, $new_option );
-
-			if ( ! $db_data ) {
-				do_action( 'PLUGIN_PREFIX_on_activate' );
-			} else {
-				do_action( 'PLUGIN_PREFIX_on_update', $db_data['Version'], $file_data['Version'] );
-			}
-		}
-	}
 
 	public function update_plugin_data() {
 
