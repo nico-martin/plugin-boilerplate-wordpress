@@ -1,6 +1,6 @@
 <?php
 
-namespace AUTHOR_NAMESPACE\PLUGIN_NAMESPACE;
+namespace nicomartin\vir2alreferer;
 
 class Plugin {
 
@@ -11,7 +11,7 @@ class Plugin {
 	public $version = '';
 	public $file = '';
 
-	public $option_key = 'PLUGIN_PREFIX_data';
+	public $option_key = 'vtlref_data';
 
 	/**
 	 * Creates an instance if one isn't already available,
@@ -27,16 +27,19 @@ class Plugin {
 
 			self::$instance = new Plugin;
 
-			if ( get_option( awpp_get_instance()->option_key ) ) {
-				$data = get_option( awpp_get_instance()->option_key );
+			if ( get_option( vtlref_get_instance()->option_key ) ) {
+				$data = get_option( vtlref_get_instance()->option_key );
+			} elseif ( function_exists( 'get_plugin_data' ) ) {
+				$data = get_plugin_data( $file );
 			} else {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
 				$data = get_plugin_data( $file );
 			}
 
 			self::$instance->name    = $data['Name'];
 			self::$instance->version = $data['Version'];
 
-			self::$instance->prefix = 'awpp';
+			self::$instance->prefix = 'vtlref';
 			self::$instance->debug  = true;
 			self::$instance->file   = $file;
 
@@ -66,14 +69,14 @@ class Plugin {
 	private function run() {
 		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
 		add_action( 'admin_init', array( $this, 'update_plugin_data' ) );
-		register_deactivation_hook( PLUGIN_PREFIX_get_instance()->file, array( $this, 'deactivate' ) );
+		register_deactivation_hook( vtlref_get_instance()->file, array( $this, 'deactivate' ) );
 	}
 
 	/**
 	 * Load translation files from the indicated directory.
 	 */
 	public function load_plugin_textdomain() {
-		load_plugin_textdomain( 'TEXT_DOMAIN', false, dirname( plugin_basename( PLUGIN_PREFIX_get_instance()->file ) ) . '/languages' );
+		load_plugin_textdomain( 'vtlref', false, dirname( plugin_basename( vtlref_get_instance()->file ) ) . '/languages' );
 	}
 
 	/**
@@ -82,25 +85,25 @@ class Plugin {
 
 	public function update_plugin_data() {
 
-		$db_data   = get_option( PLUGIN_PREFIX_get_instance()->option_key );
-		$file_data = get_plugin_data( PLUGIN_PREFIX_get_instance()->file );
+		$db_data   = get_option( vtlref_get_instance()->option_key );
+		$file_data = get_plugin_data( vtlref_get_instance()->file );
 
 		if ( ! $db_data || version_compare( $file_data['Version'], $db_data['Version'], '>' ) ) {
 
-			PLUGIN_PREFIX_get_instance()->name    = $file_data['Name'];
-			PLUGIN_PREFIX_get_instance()->version = $file_data['Version'];
+			vtlref_get_instance()->name    = $file_data['Name'];
+			vtlref_get_instance()->version = $file_data['Version'];
 
-			update_option( PLUGIN_PREFIX_get_instance()->option_key, $file_data );
+			update_option( vtlref_get_instance()->option_key, $file_data );
 
 			if ( ! $db_data ) {
-				do_action( 'PLUGIN_PREFIX_on_activate' );
+				do_action( 'vtlref_on_activate' );
 			} else {
-				do_action( 'PLUGIN_PREFIX_on_update', $db_data['Version'], $file_data['Version'] );
+				do_action( 'vtlref_on_update', $db_data['Version'], $file_data['Version'] );
 			}
 		}
 	}
 
 	public function deactivate() {
-		delete_option( PLUGIN_PREFIX_get_instance()->option_key );
+		delete_option( vtlref_get_instance()->option_key );
 	}
 }
